@@ -6,8 +6,15 @@ import math3d
 import tower_obj
 import tower_const
 
+import tower_world
 
 class CTower(tower_obj.CGameObj):
+
+	def __init__(self, init_pos):
+		super(CTower, self).__init__()
+		print "init pos is ", init_pos
+		self._pos = init_pos
+
 	def init(self):
 		self.bill = None
 		self.moving_dir = math3d.vector(0, 0, 0)
@@ -15,14 +22,13 @@ class CTower(tower_obj.CGameObj):
 
 	def create_sprite(self, gim_file, name, layer_id):
 		super(CTower, self).create_sprite(gim_file, name, layer_id)
-		#self.animations = ['npc_act_001', 'npc_act_003']
 
 		self.set_state(tower_const.TOWER_STATE_DROPPING)
 
 	def create_bill(self, swf_file, text=""):
 		if self.bill:
 			self.bill.destroy()
-		self.bill = iworld3d.space_movie(swf_file, True, pixel_unit=0.1, layer_id=eggyolk2_const.SCENE_LAYER)
+		self.bill = iworld3d.space_movie(swf_file, True, pixel_unit=0.1, layer_id=tower_const.SCENE_LAYER)
 		self.sprite.bind("cstop", self.bill)
 		self.bill.billboard_type = True
 
@@ -35,7 +41,7 @@ class CTower(tower_obj.CGameObj):
 			self.bill = None
 
 	def create_phy(self, layer_id):
-		self.phy = iphy3d.col_sphere(tower_const.RADIUS, tower_const.COL_NPC, tower_const.COL_NPC)
+		self.phy = iphy3d.col_box(tower_const.BOX_HALF_LEN, tower_const.BOX_HALF_LEN, tower_const.BOX_HALF_HIGHT, tower_const.COL_NPC, tower_const.COL_NPC)
 		self.phy.add_to_layer(layer_id)
 
 	def set_state(self, state):
@@ -82,6 +88,11 @@ class CTower(tower_obj.CGameObj):
 		self.update_collide_pos(result.fraction)
 		self.set_state(tower_const.TOWER_STATE_MOVING)
 
+		init_z = tower_world.tower_init_pos[2]
+		init_z += 5
+		new_pos = (0, init_z, 0)
+		tower_world.set_tower_init_pos(new_pos)
+
 	def update_collide_pos(self, fraction):
 		cur_pos = math3d.vector(*self.pos)
 		length = (cur_pos - self.target_pos).length
@@ -123,15 +134,15 @@ class CTower(tower_obj.CGameObj):
 			return
 		self.set_phy_key(0, 0, 0)
 		if col_type == tower_const.COL_TYPE_CAPSULE:
-			temp = iphy3d.col_capsule(4, 4, tower_const.COL_NPC, eggyolk2_const.COL_NPC)
+			temp = iphy3d.col_capsule(4, 4, tower_const.COL_NPC, tower_const.COL_NPC)
 		elif col_type == tower_const.COL_TYPE_CYLINDER:
-			temp = iphy3d.col_cylinder(4, 6, tower_const.COL_NPC, eggyolk2_const.COL_NPC)
+			temp = iphy3d.col_cylinder(4, 6, tower_const.COL_NPC, tower_const.COL_NPC)
 		elif col_type == tower_const.COL_TYPE_MODEL:
-			temp = iphy3d.col_model(self.sprite, tower_const.COL_NPC, eggyolk2_const.COL_NPC)
+			temp = iphy3d.col_model(self.sprite, tower_const.COL_NPC, tower_const.COL_NPC)
 			temp.rotation_matrix = self.sprite.rotation_matrix
 			self.set_phy_key(0, 7, 0)
 		elif col_type == tower_const.COL_TYPE_SPHERE:
-			temp = iphy3d.col_sphere(6, tower_const.COL_NPC, eggyolk2_const.COL_NPC)
+			temp = iphy3d.col_sphere(6, tower_const.COL_NPC, tower_const.COL_NPC)
 		else:
 			return
 		self.phy.remove_from_layer()

@@ -29,6 +29,8 @@ cam_rot = 0
 
 CAMERA_MOVE_STEP = 1
 
+tower_init_pos = (0, 0, 0)
+
 def init(api):
 	API = api
 
@@ -52,12 +54,12 @@ def init(api):
 
 	create_objs()
 
-def create_tower():
-	t = tower_player.CTower()
+def create_tower(init_pos):
+	t = tower_player.CTower(init_pos)
 	t.create_sprite("tower/res/world3d/tower0.gim", "tower0", tower_const.SCENE_LAYER)
 	t.create_phy(tower_const.SCENE_LAYER)
-	t.set_sprite_key(0, 15, 0)
-	t.sprite.rotate_to_xyz(y=math.pi)
+	#t.set_sprite_key(0, -10, 0)
+	#t.sprite.rotate_to_xyz(y=math.pi)
 	return t
 
 def create_objs():
@@ -65,14 +67,14 @@ def create_objs():
 	stone.create_sprite("tower/res/world3d/platform.gim", "platform", tower_const.SCENE_LAYER)
 	stone.create_phy(tower_const.SCENE_LAYER)
 	stone.sprite.scale = (0.1, 0.1, 0.1)
-	stone.pos = (-10, 30, -100)
+	stone.pos = (-10, 40, -100)
 	iphy3d.update(tower_const.SCENE_LAYER)
 
 def on_key_msg(msg, key_code):
-	global towers
+	global towers, tower_init_pos
 	if msg == game.MSG_KEY_UP:
 		if key_code ==  game.VK_SPACE:
-			t = create_tower()
+			t = create_tower(tower_init_pos)
 			t.pos = tower_const.TOWER_INIT_POS
 			towers.append(t)
 			iphy3d.update(tower_const.SCENE_LAYER)
@@ -150,3 +152,11 @@ def on_mouse_msg (msg, key):
 
 def on_mouse_wheel (msg, delta, key_state):
 	pass
+
+def get_tower_init_pos():
+	global tower_init_pos
+	return tower_init_pos
+
+def set_tower_init_pos(new_pos):
+	global tower_init_pos
+	tower_init_pos = new_pos

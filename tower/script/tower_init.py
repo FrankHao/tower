@@ -2,6 +2,7 @@
 # 创建客户端程序的结构
 
 import iapi
+import g_msg
 
 import tower_world
 
