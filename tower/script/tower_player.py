@@ -15,7 +15,7 @@ class CTower(tower_obj.CGameObj):
 
 	def create_sprite(self, gim_file, name, layer_id):
 		super(CTower, self).create_sprite(gim_file, name, layer_id)
-		self.animations = ['npc_act_001', 'npc_act_003']
+		#self.animations = ['npc_act_001', 'npc_act_003']
 
 		self.set_state(tower_const.TOWER_STATE_DROPPING)
 
@@ -40,14 +40,14 @@ class CTower(tower_obj.CGameObj):
 
 	def set_state(self, state):
 		self.state = state
-		self.sprite.play_animation(self.animations[self.state])
+		#self.sprite.play_animation(self.animations[self.state])
 
 	def sweep_test(self, start, end):
 		ext_end = start + (end - start) * 2.0
 		sweep_filter = iphy3d.col_filter(0, 0, iphy3d.EXCLUDE_FILTER)
-		#sweep_filter = iphy3d.col_filter(tower_const.COL_ROAD | tower_const.COL_NPC, 0, iphy3d.EXCLUDE_FILTER) 
+		#sweep_filter = iphy3d.col_filter(tower_const.COL_ROAD | tower_const.COL_NPC, 0, iphy3d.EXCLUDE_FILTER)
 		#sweep_filter = iphy3d.col_filter(tower_const.COL_NPC , tower_const.COL_NPC, iphy3d.EQUAL_FILTER)
-		#sweep_filter = iphy3d.col_filter(tower_const.COL_NPC, tower_const.COL_ROAD, iphy3d.EQUAL_FILTER) 
+		#sweep_filter = iphy3d.col_filter(tower_const.COL_NPC, tower_const.COL_ROAD, iphy3d.EQUAL_FILTER)
 		#sweep_filter = iphy3d.col_filter(tower_const.COL_NPC , tower_const.COL_ROAD, iphy3d.INEQUAL_FILTER)
 		try:
 			result = iphy3d.sweep_test(tower_const.SCENE_LAYER, self.phy, start, ext_end, sweep_filter)
@@ -112,7 +112,7 @@ class CTower(tower_obj.CGameObj):
 			self.pos = self.target_pos.x, self.target_pos.y, self.target_pos.z
 			return
 		self.update_collide_pos(result.fraction)
-	
+
 
 	def update(self):
 		self.update_dropping()
@@ -128,8 +128,8 @@ class CTower(tower_obj.CGameObj):
 			temp = iphy3d.col_cylinder(4, 6, tower_const.COL_NPC, eggyolk2_const.COL_NPC)
 		elif col_type == tower_const.COL_TYPE_MODEL:
 			temp = iphy3d.col_model(self.sprite, tower_const.COL_NPC, eggyolk2_const.COL_NPC)
-			temp.rotation_matrix = self.sprite.rotation_matrix 
-			self.set_phy_key(0, 7, 0) 
+			temp.rotation_matrix = self.sprite.rotation_matrix
+			self.set_phy_key(0, 7, 0)
 		elif col_type == tower_const.COL_TYPE_SPHERE:
 			temp = iphy3d.col_sphere(6, tower_const.COL_NPC, eggyolk2_const.COL_NPC)
 		else:

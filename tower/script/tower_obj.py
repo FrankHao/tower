@@ -6,9 +6,9 @@ import tower_const
 
 class CGameObj(object):
 	def __init__(self):
-		self.sprite = None	
-		self.phy = None	
-		self._pos = (0,0,0)	
+		self.sprite = None
+		self.phy = None
+		self._pos = (0,0,0)
 		self._sprite_key = (0, 0, 0)
 		self._phy_key = (0, 0, 0)
 		self.init()
@@ -33,7 +33,7 @@ class CGameObj(object):
 
 	def _get_pos(self):
 		return self._pos
-		
+
 	def _set_pos(self, pos):
 		self._pos = pos
 		if self.sprite:

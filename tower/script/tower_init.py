@@ -2,7 +2,6 @@
 # 创建客户端程序的结构
 
 import iapi
-import g_msg
 
 import tower_world
 
@@ -18,7 +17,7 @@ def init (**args):
 	# gamemode是游戏模式
 	# gameid是游戏编号
 	# roomid是房间编号
-	
+
 	# 初始化API: API = iapi.API()
 	# 此时便可以使用iapi提供的函数了。
 	# 需要注意的是，iapi会升级版本的，这样生成默认就是使用最新版本的API，
@@ -30,8 +29,8 @@ def init (**args):
 	# 注册回调, 参数说明请查看API文档
 	API.register_callback( int(args['gameid']),
 		my_logic, my_render, my_post_logic,
-		on_key_msg = on_key_msg, 
-		on_mouse_msg = on_mouse_msg, 
+		on_key_msg = on_key_msg,
+		on_mouse_msg = on_mouse_msg,
 		on_mouse_wheel =  on_mouse_wheel)
 
 	# 初始化网络
@@ -44,21 +43,21 @@ def get_event_map():
 	# if not _event_map:
 		# _event_map['msg'] = callback_function
 	return _event_map
-	
+
 def force_destroy():
 	pass
-	
+
 # 回调函数
 def my_logic ():
 	tower_world.logic()
 
-	
+
 def my_post_logic ():
-	tower_world.post_logic()	
-	
+	tower_world.post_logic()
+
 def my_render ():
-	tower_world.render()	
-	
+	tower_world.render()
+
 def on_key_msg (msg, key_code):
 	# 键盘事件回调
 	tower_world.on_key_msg(msg, key_code)
@@ -72,4 +71,4 @@ def on_mouse_msg (msg, key):
 def on_mouse_wheel (msg, delta, key_state):
 	# 鼠标滚轮事件回调
 	tower_world.on_mouse_wheel(msg, delta, key_state)
-	
+
