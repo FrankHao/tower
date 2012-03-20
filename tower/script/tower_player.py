@@ -2,27 +2,29 @@
 
 import iphy3d
 import math3d
+import copy
 
 import tower_obj
 import tower_const
+import iworld3d
 
-import tower_world
+g_tower_init_pos = copy.copy(tower_const.TOWER_INIT_POS)
 
 class CTower(tower_obj.CGameObj):
 
-	def __init__(self, init_pos):
+	def __init__(self):
 		super(CTower, self).__init__()
-		print "init pos is ", init_pos
-		self._pos = init_pos
 
 	def init(self):
 		self.bill = None
 		self.moving_dir = math3d.vector(0, 0, 0)
 		self.target_pos = math3d.vector(0, 0, 0)
+		self.pos = g_tower_init_pos[0], g_tower_init_pos[1], g_tower_init_pos[2]
+
+		print "init pos", self.pos
 
 	def create_sprite(self, gim_file, name, layer_id):
 		super(CTower, self).create_sprite(gim_file, name, layer_id)
-
 		self.set_state(tower_const.TOWER_STATE_DROPPING)
 
 	def create_bill(self, swf_file, text=""):
@@ -46,7 +48,6 @@ class CTower(tower_obj.CGameObj):
 
 	def set_state(self, state):
 		self.state = state
-		#self.sprite.play_animation(self.animations[self.state])
 
 	def sweep_test(self, start, end):
 		ext_end = start + (end - start) * 2.0
@@ -88,10 +89,15 @@ class CTower(tower_obj.CGameObj):
 		self.update_collide_pos(result.fraction)
 		self.set_state(tower_const.TOWER_STATE_MOVING)
 
-		init_z = tower_world.tower_init_pos[2]
-		init_z += 5
-		new_pos = (0, init_z, 0)
-		tower_world.set_tower_init_pos(new_pos)
+		global g_tower_init_pos
+		init_z = g_tower_init_pos[1]
+		init_z -= 5
+		g_tower_init_pos = (0, init_z, -100)
+
+		cam = iworld3d.get_camera(tower_const.SCENE_LAYER)
+		position = cam.position
+		position.y -= 5
+		cam.position = position
 
 	def update_collide_pos(self, fraction):
 		cur_pos = math3d.vector(*self.pos)
